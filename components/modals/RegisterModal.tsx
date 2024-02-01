@@ -6,47 +6,35 @@ import Input from "../Input";
 import Modal from "../Modal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 
-const LoginModal = () => {
+const RegisterModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const onToggle = useCallback(() => {
     if (isLoading) {
       return;
     }
-    registerModal.onOpen();
-    loginModal.onClose();
+    registerModal.onClose();
+    loginModal.onOpen();
   }, [isLoading, registerModal, loginModal]);
 
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
 
-      loginModal.onClose();
+      registerModal.onClose();
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
-  }, [loginModal]);
-
-  const footerContent = (
-    <div className="text-neutral-400 text-center mt-4">
-      <p>
-        First time using TrendRiff?
-        <span
-          onClick={onToggle}
-          className="text-white cursor-pointer hover:underline transition"
-        >
-          {" "}
-          Create an account
-        </span>
-      </p>
-    </div>
-  );
+  }, [registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -57,6 +45,18 @@ const LoginModal = () => {
         value={email}
       />
       <Input
+        placeholder="Name"
+        onChange={(e) => setName(e.target.value)}
+        disabled={isLoading}
+        value={name}
+      />
+      <Input
+        placeholder="Username"
+        onChange={(e) => setUsername(e.target.value)}
+        disabled={isLoading}
+        value={username}
+      />
+      <Input
         placeholder="Password"
         onChange={(e) => setPassword(e.target.value)}
         disabled={isLoading}
@@ -65,13 +65,28 @@ const LoginModal = () => {
     </div>
   );
 
+  const footerContent = (
+    <div className="text-neutral-400 text-center mt-4">
+      <p>
+        Already have an account?
+        <span
+          onClick={onToggle}
+          className="text-white cursor-pointer hover:underline transition"
+        >
+          {" "}
+          Sign in
+        </span>
+      </p>
+    </div>
+  );
+
   return (
     <Modal
       disabled={isLoading}
-      isOpen={loginModal.isOpen}
-      title="Login"
-      actionLabel="Sign in"
-      onClose={loginModal.onClose}
+      isOpen={registerModal.isOpen}
+      title="Create an account"
+      actionLabel="Sign Up"
+      onClose={registerModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}
       footer={footerContent}
@@ -79,4 +94,4 @@ const LoginModal = () => {
   );
 };
 
-export default LoginModal;
+export default RegisterModal;
